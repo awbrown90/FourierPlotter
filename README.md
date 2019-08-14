@@ -15,3 +15,12 @@ desire. For example check out drawing a square or triangle below.
 
 ![](https://github.com/awbrown90/FourierPlotter/blob/master/fourier_square.gif)
 
+How to use.
+Main File: drawFourier.py
+
+in boundaryFunction set the number to try out different boundaries, 1 is a step function for instance.
+
+
+
+
+
