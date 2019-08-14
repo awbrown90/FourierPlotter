@@ -20,7 +20,7 @@ Main File: drawFourier.py
 
 in boundaryFunction set the number to try out different boundaries, 1 is a step function for instance.
 
-
+![](https://github.com/awbrown90/FourierPlotter/blob/master/step.png)
 
 
 
