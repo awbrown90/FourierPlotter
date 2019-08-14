@@ -18,6 +18,7 @@ desire. For example check out drawing a square or triangle below.
 # How to use
 Main File: drawFourier.py
 
+## Step Function
 in boundaryFunction set the number to try out different boundaries, input 0 is a step function for instance.
 
 ![](https://github.com/awbrown90/FourierPlotter/blob/master/step.png)
@@ -26,3 +27,5 @@ This looks very interesting as a set of rotating vectors in the complex plane.
 
 ![](https://github.com/awbrown90/FourierPlotter/blob/master/fourier_step.gif)
 
+## Polygons
+ input 1 is for polygons, like the triangle and square shown above. By default the polygon is a trainagle which is incribed in a circle with radius 1 and the triangle has a starting angle of pi/2. The polygon can be defined in `funcFourier.py` in the `polygonFunction`.
