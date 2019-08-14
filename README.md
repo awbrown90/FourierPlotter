@@ -18,7 +18,7 @@ desire. For example check out drawing a square or triangle below.
 # How to use
 Main File: drawFourier.py
 
-#### Resolution of drawn curve AKA number of vectors being used
+#### Resolution of drawn curve: number of vectors being used
 Number of vectors is defined as the parameter `numFourier`, feel free to decrease this number however increasing from 50 by too much seems to lead to a bug in the code.
 
 ## Step Function
