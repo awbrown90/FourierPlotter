@@ -11,3 +11,4 @@ that are used the more accurate the created boundary is to the actual defined bo
 The remarkable thing is that by having a self contained function of time with a set number of weights we can draw any arbitary continous curve that we
 desire. For example check out drawing a square or triangle below.
 
+![](https://github.com/awbrown90/FourierPlotter/blob/master/fourier_triangle.gif)
