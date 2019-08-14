@@ -12,3 +12,6 @@ The remarkable thing is that by having a self contained function of time with a 
 desire. For example check out drawing a square or triangle below.
 
 ![](https://github.com/awbrown90/FourierPlotter/blob/master/fourier_triangle.gif)
+
+![](https://github.com/awbrown90/FourierPlotter/blob/master/fourier_square.gif)
+
