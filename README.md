@@ -24,5 +24,5 @@ in boundaryFunction set the number to try out different boundaries, input 0 is a
 
 This looks very interesting as a set of rotating vectors in the complex plane.
 
-
+![](https://github.com/awbrown90/FourierPlotter/blob/master/fourier_step.gif)
 
