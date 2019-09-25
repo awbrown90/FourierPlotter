@@ -7,11 +7,12 @@ Define functions for drawFourier.py
 '''
 import numpy as np
 import math
+import random
 PI = np.pi
 
 '''
 Multiply two rotating vectors
-input: two rotating vectors in the form  A*e^(B*x+C)i, [A, B, C]
+input: two rotating vectors in the form  A*e^(C*x+B)i, [A, B, C]
 output: product as a new rotating vector
 '''
 def multipleE(e1,e2):
@@ -28,7 +29,7 @@ def calcE(e1,t):
 '''
 Convert complex number to rotating vector
 input: real, imaginary components, [r, i]
-output: rotating vector in the form A*e^(B*x+C)i, [A, B, C]
+output: rotating vector in the form A*e^(C*x+B)i, [A, B, C]
 '''
 def toE(ri):
 	r = ri[0]
@@ -86,11 +87,42 @@ input:
 	theta, start angle
 output: points of the polygon, E.G. a square would output 4 points
 '''
-def polygonGenerator(s, cx, cy, r, theta):
+def polygonGenerator(n, cx, cy, r, theta):
 	points = []
-	sector = (2*PI)/s
-	for i in range(s):
+	sector = (2*PI)/n
+	for i in range(n):
 		x, y = calcE([r, theta, sector],i)
+		points.append([x,y])
+	return points
+
+def lineGenerator(n, cx, cy, r, theta):
+	points = []
+	sector = (2*PI)/n
+	for i in range(n):
+		x, y = calcE([r, theta, sector],i)
+		points.append([x,y])
+	
+	for i in range(1,n-1):
+		x, y = calcE([r, theta, sector],n-1-i)
+		points.append([x,y])
+	
+	return points
+
+def starGenerator(n, cx, cy, r, rs, theta):
+
+	if rs < .1:
+		rs = .1
+	if rs > .9:
+		rs = .9
+
+	innerTheta = (2*PI/n)/2
+
+	points = []
+	sector = (2*PI)/n
+	for i in range(n):
+		x, y = calcE([r, theta, sector],i)
+		points.append([x,y])
+		x, y = calcE([rs*r, theta+innerTheta, sector],i)
 		points.append([x,y])
 	return points
 
@@ -103,7 +135,17 @@ output: interpolated points of polygon
 '''
 def polygonFunction(t):
 	# Define polygon here by setting polygonGenerator variables, see above for details
-	polyPoints = polygonGenerator(3, 0, 0 , 1, PI/2)
+	#polyPoints = polygonGenerator(2, 0, 0 , 1, 0)
+	#polyPoints = lineGenerator(5, 0, 0 , 1, 0)
+	polyPoints = starGenerator(5, 0, 0, 1.2, 0.5, PI/2)
+
+	'''
+	polyPoints = []
+	numPoints = random.randint(3,10)
+	for i in range(numPoints):
+		polyPoints.append([2-4*random.random(),2-4*random.random()])
+	#polyPoints = [[0,0],[1,2],[2,1]]
+	'''
 	span = 1./len(polyPoints)
 
 	if t < 0:
@@ -112,9 +154,9 @@ def polygonFunction(t):
 		t -= int(t)
 	index = int(t/span)
 	vector = [polyPoints[(index+1)%len(polyPoints)][0]-polyPoints[index][0], polyPoints[(index+1)%len(polyPoints)][1]-polyPoints[index][1]]
-	mag = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1])
 	vector = [vector[0]/span, vector[1]/span]
 	split = t-index*span
+                       
 	return [vector[0]*split+polyPoints[index][0], vector[1]*split+polyPoints[index][1]]
 
 '''
@@ -128,8 +170,21 @@ def custom(t):
 	if t > 1:
 		t -= int(t)
 
-	# Define this function returning some complex value, right now just returning 1 + i 
-	return [1, 1]
+	'''
+	if t < 0.25:
+		return[1+np.cos(t*4*PI), np.sin(t*4*PI)]
+	if t < 0.75:
+		return[-1+np.cos((t-0.25)*4*PI),-np.sin((t-0.25)*4*PI)]
+	
+	return[1+np.cos((t-0.75)*4*PI+PI),np.sin((t-0.75)*4*PI+PI)]
+	'''
+	#r = 3*np.sin(2*t*2*PI)
+	r = np.sqrt((np.cos(t*2*PI)*np.cos(t*2*PI)-np.sin(t*2*PI)*np.sin(t*2*PI))*(np.cos(t*2*PI)*np.cos(t*2*PI)-np.sin(t*2*PI)*np.sin(t*2*PI))+(2*np.cos(t*2*PI)*np.sin(t*2*PI))*(2*np.cos(t*2*PI)*np.sin(t*2*PI)))
+	nt = .25
+	#r = np.sqrt(np.cos(t*4*PI)*np.cos(t*4*PI)+np.sin(t*4*PI)*np.sin(t*4*PI))
+	return [r*np.cos(t*2*PI),r*np.sin(t*2*PI)]
+
+
 
 '''
 Pick different kinds of boundaries
@@ -150,5 +205,24 @@ def boundaryFunction(choice):
 	else:
 		return custom
 
+def fastIntegrate(func, start, stop, dt):
+	summed = 0
+	for t in np.arange(start,stop,dt):
+		summed += func(t)*dt
+	return summed
 
+
+def calculateArea(vectors):
+
+	
+	def rdist(theta):
+		x_comp = 0
+		y_comp = 0
+		for vector in vectors:
+			x_comp += vector[0]*np.cos(vector[1]+vector[2]*theta)
+			y_comp += vector[0]*np.sin(vector[1]+vector[2]*theta)
+		return x_comp*x_comp+y_comp*y_comp
+
+	
+	return .5*fastIntegrate(rdist, 0, 2*PI, 0.01)
 
