@@ -134,10 +134,13 @@ input: time between [0, 1]
 output: interpolated points of polygon
 '''
 def polygonFunction(t):
+
+	t_offset = 0
+	#t_offset = 0
 	# Define polygon here by setting polygonGenerator variables, see above for details
-	#polyPoints = polygonGenerator(2, 0, 0 , 1, 0)
+	polyPoints = polygonGenerator(3, 0, 0 , 0.5, PI/4) #0.5340707511117613
 	#polyPoints = lineGenerator(5, 0, 0 , 1, 0)
-	polyPoints = starGenerator(5, 0, 0, 1.2, 0.5, PI/2)
+	#polyPoints = starGenerator(5, 0, 0, 1.2, 0.5, PI/2-2*PI/5)
 
 	'''
 	polyPoints = []
@@ -148,8 +151,10 @@ def polygonFunction(t):
 	'''
 	span = 1./len(polyPoints)
 
+	t += t_offset
+
 	if t < 0:
-		t *= -1
+		t += int(t)+1
 	if t >= 1:
 		t -= int(t)
 	index = int(t/span)
@@ -180,7 +185,6 @@ def custom(t):
 	'''
 	#r = 3*np.sin(2*t*2*PI)
 	r = np.sqrt((np.cos(t*2*PI)*np.cos(t*2*PI)-np.sin(t*2*PI)*np.sin(t*2*PI))*(np.cos(t*2*PI)*np.cos(t*2*PI)-np.sin(t*2*PI)*np.sin(t*2*PI))+(2*np.cos(t*2*PI)*np.sin(t*2*PI))*(2*np.cos(t*2*PI)*np.sin(t*2*PI)))
-	nt = .25
 	#r = np.sqrt(np.cos(t*4*PI)*np.cos(t*4*PI)+np.sin(t*4*PI)*np.sin(t*4*PI))
 	return [r*np.cos(t*2*PI),r*np.sin(t*2*PI)]
 
@@ -210,19 +214,36 @@ def fastIntegrate(func, start, stop, dt):
 	for t in np.arange(start,stop,dt):
 		summed += func(t)*dt
 	return summed
-
+ 
 
 def calculateArea(vectors):
 
 	
-	def rdist(theta):
+	def rdist(time):
 		x_comp = 0
 		y_comp = 0
+		
 		for vector in vectors:
-			x_comp += vector[0]*np.cos(vector[1]+vector[2]*theta)
-			y_comp += vector[0]*np.sin(vector[1]+vector[2]*theta)
-		return x_comp*x_comp+y_comp*y_comp
+			dt = time/(2*PI)
+			x_comp += vector[0]*np.cos(vector[1]+vector[2]*dt)
+			y_comp += vector[0]*np.sin(vector[1]+vector[2]*dt)
+		mag = x_comp*x_comp+y_comp*y_comp
+		
+		'''
+		mag = 0
+		if time >= 0 and time < PI/4:
+			mag += 1/np.cos(time)
+		elif time >= PI/4 and time < 3*PI/4:
+			mag += 1/np.sin(time)
+		elif time >= 3*PI/4 and time < 5*PI/4:
+			mag += -1/np.cos(time)
+		elif time >= 5*PI/4 and time < 7*PI/4:
+			mag += 1/np.sin(-time)
+		else:
+			mag += 1/np.cos(time)
+		'''
+		return mag
 
-	
-	return .5*fastIntegrate(rdist, 0, 2*PI, 0.01)
+
+	return .5*fastIntegrate(rdist, 0, 2*PI, 0.001)
 
